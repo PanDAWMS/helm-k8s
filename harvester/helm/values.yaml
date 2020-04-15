@@ -4,7 +4,11 @@
 
 replicaCount: 3
 DNSserver: 127.0.0.1
-harvester_id: boxed_test_02
 
-service:
+harvester_id: boxed_test_02
+ProxyPath: /usr/etc/panda/proxy
+
+mariadb:
   clusterIP: 10.254.0.100
+  RootPassword: FIXMEPASSWORD
+  Password: FIXME

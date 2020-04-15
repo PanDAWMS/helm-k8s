@@ -55,13 +55,13 @@ spec:
         imagePullPolicy: "Always"
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: PaSsWOrd
+          value: {{ .Values.mariadb.RootPassword }}
         - name: MYSQL_DATABASE
           value: HARVESTER
         - name: MYSQL_USER
           value: harvester
         - name: MYSQL_PASSWORD
-          value: FIXME
+          value: {{ .Values.mariadb.Password }}
         ports:
         - containerPort: 3306
         volumeMounts:
@@ -83,4 +83,4 @@ spec:
   - port: 3306
   selector:
     app: mariadb
-  clusterIP: {{ .Values.service.clusterIP }}
+  clusterIP: {{ .Values.mariadb.clusterIP }}

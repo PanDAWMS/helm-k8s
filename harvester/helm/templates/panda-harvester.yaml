@@ -58,13 +58,13 @@ data:
     user = harvester
 
     # password for MariaDB. N/A for sqlite
-    password = FIXME
+    password = {{ .Values.mariadb.Password }}
 
     # schema for MariaDB. N/A for sqlite
     schema = HARVESTER
 
     # host name for MariaDB. N/A for sqlite
-    host = {{ .Values.service.clusterIP }}
+    host = {{ .Values.mariadb.clusterIP }}
 
     # port number for MariaDB. N/A for sqlite
     port = 3306
@@ -127,10 +127,10 @@ data:
     ca_cert = /etc/pki/tls/certs/CERN-bundle.pem
 
     # certificate
-    cert_file = /usr/etc/panda/atlas_prod_proxy
+    cert_file = {{ .Values.ProxyPath }}
 
     # key
-    key_file = /usr/etc/panda/atlas_prod_proxy
+    key_file = {{ .Values.ProxyPath }}
 
     # base URL via http
     pandaURL = http://pandaserver.cern.ch:25080/server/panda

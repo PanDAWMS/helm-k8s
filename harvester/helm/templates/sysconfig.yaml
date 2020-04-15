@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  panda_harvester: |
+    # define virtual env if not using python venv
+    export VIRTUAL_ENV=/usr
+
+    # panda home
+    export PANDA_HOME=${VIRTUAL_ENV}
+
+    # timezone
+    export TZ=UTC
+
+    # python site packages
+    export SITE_PACKAGES_PATH=/usr/local/lib/python3.6/site-packages
+
+    # import panda modules
+    export PYTHONPATH=${SITE_PACKAGES_PATH}/pandacommon:${SITE_PACKAGES_PATH}
+
+    # option for frontend
+    OPTIONS="-f "${VIRTUAL_ENV}"/etc/panda/panda_harvester-httpd.conf"
+
+    # passphrase for watcher
+    export HARVESTER_WATCHER_PASSPHRASE=FIXME_FIXME_FIXME
+kind: ConfigMap
+metadata:
+  name: sysconfig-config
+  creationTimestamp: null 

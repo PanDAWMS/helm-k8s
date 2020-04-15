@@ -1,0 +1,10 @@
+# Default values for harvester-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+DNSserver: 127.0.0.1
+harvester_id: boxed_test_02
+
+service:
+  clusterIP: 10.254.0.100

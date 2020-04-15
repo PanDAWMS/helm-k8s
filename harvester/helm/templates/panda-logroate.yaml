@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  panda_logroate: "/var/log/panda/*log {\n    create 0644 root root \n    rotate 180\n
+    \   daily\n    compress\n    missingok\n    notifempty\n    su root root\n}\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: panda-logroate

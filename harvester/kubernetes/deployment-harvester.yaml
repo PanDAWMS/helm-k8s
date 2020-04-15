@@ -50,9 +50,9 @@ spec:
             - configMap:
                 name: panda-logroate
             - configMap:
-                name: condor-file
+                name: submitter-config
             - secret:
-                name: atlas-proxy
+                name: proxy-file
         - name: sysconfig-config
           configMap:
             name: sysconfig-config

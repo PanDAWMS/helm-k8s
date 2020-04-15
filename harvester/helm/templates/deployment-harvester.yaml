@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harvester-deployment
+  name: harvester-deployment-test
   labels:
     app: harvester
 spec:
@@ -52,7 +52,7 @@ spec:
             - configMap:
                 name: panda-logroate
             - configMap:
-                name: condor-file
+                name: submitter-config
             - secret:
                 name: proxy-file
         - name: sysconfig-config

@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harvester-deployment
+  labels:
+    app: harvester
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: harvester
+  template:
+    metadata:
+      name: test-harvester
+      labels:
+        app: harvester
+    spec:
+      containers:
+        - name: harvester-container
+          image: handson123/harvester:centos7
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - mkdir /harvester_wdirs;
+              mkdir -p /data2/atlpan/condor_logs;
+              mkdir -p /etc/condor/config.d;
+              echo "SEC_CLIENT_AUTHENTICATION_METHODS = FS, GSI, CLAIMTOBE" > /etc/condor/config.d/condor_config.local; 
+              mkdir -p /var/log/harvester/k8slog;
+              sh harvester_start.sh
+          env:
+          - name: RESTART_CYCLE
+            value: '86400'
+          volumeMounts:
+          - name: panda-config
+            mountPath: /usr/etc/panda
+            readOnly: False
+          - name: sysconfig-config
+            mountPath: /usr/etc/sysconfig
+            readOnly: True
+#          - name: log-panda
+#            mountPath: /var/log/panda
+#            readOnly: False
+#          - name: log-harvester
+#            mountPath: /var/log/harvester
+#            readOnly: False
+#        - name: log-rsync
+#          image: docker.io/alpine
+#          command: ["/bin/sh", "-c"]
+#          args:
+#            - apk add rsync openssh-client;
+#              while true;
+#              do
+#                rsync -ax /var/log/* root@202.169.169.20:/tmp/log/`hostname`;
+#                sleep 300;
+#              done
+#          volumeMounts:
+#          - name: log-panda
+#            mountPath: /var/log/panda
+#          - name: log-harvester
+#            mountPath: /var/log/harvester
+#          - name: ssh-key
+#            mountPath: /root/.ssh
+#            readOnly: False
+      volumes:
+        - name: panda-config
+          projected:
+            sources:
+            - configMap:
+                name: panda-common
+            - configMap:
+                name: panda-harvester
+            - configMap:
+                name: panda-queue
+            - configMap:
+                name: panda-uwsgi
+            - configMap:
+                name: panda-logroate
+            - configMap:
+                name: condor-file
+            - secret:
+                name: atlas-proxy
+            - configMap:
+                name: asgct1k8s
+        - name: sysconfig-config
+          configMap:
+            name: sysconfig-config
+#        - name: log-panda
+#          emptyDir: {}
+#        - name: log-harvester
+#          emptyDir: {}
+#        - name: ssh-key
+#          secret:
+#            secretName: ssh-key
+#            defaultMode: 0600
+      restartPolicy: Always
+      dnsConfig:
+        nameservers:
+          - {{ .Values.DNSserver }}

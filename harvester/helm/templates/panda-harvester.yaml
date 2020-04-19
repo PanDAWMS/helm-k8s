@@ -9,10 +9,10 @@ data:
     [master]
 
     # user name of the daemon process
-    uname = root
+    uname = {{ .Values.uname }}
 
     # group name of the daemon process
-    gname = root
+    gname = {{ .Values.gname }}
 
     # logger name
     loggername = harvester

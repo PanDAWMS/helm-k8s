@@ -19,14 +19,9 @@ spec:
         - name: harvester-container
           image: pandawms/harvester:centos7
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
+          command: ["/bin/sh"]
           args:
-            - mkdir /harvester_wdirs;
-              mkdir -p /data2/atlpan/condor_logs;
-              mkdir -p /etc/condor/config.d;
-              echo "SEC_CLIENT_AUTHENTICATION_METHODS = FS, GSI, CLAIMTOBE" > /etc/condor/config.d/condor_config.local; 
-              mkdir -p /var/log/harvester/k8slog;
-              sh harvester_start.sh
+            - harvester_start.sh
           env:
           - name: RESTART_CYCLE
             value: '86400'
@@ -37,6 +32,8 @@ spec:
           - name: sysconfig-config
             mountPath: /usr/etc/sysconfig
             readOnly: True
+      volumes:
+        - name: panda-config
           projected:
             sources:
             - configMap:

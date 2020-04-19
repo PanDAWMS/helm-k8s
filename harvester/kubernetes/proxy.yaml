@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  proxy: 000000000
+  proxy: cHJveHkgZmlsZQ==
 kind: Secret
 metadata:
   creationTimestamp: null

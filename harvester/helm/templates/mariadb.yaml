@@ -1,7 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: "1"
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mariadb
+  clusterIP: {{ .Values.mariadb.clusterIP }}
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: "2"
 spec:
   strategy:
     rollingUpdate:
@@ -33,15 +52,3 @@ spec:
         ports:
         - containerPort: 3306
 
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mariadb
-spec:
-  ports:
-  - port: 3306
-  selector:
-    app: mariadb
-  clusterIP: {{ .Values.mariadb.clusterIP }}

@@ -1,7 +1,7 @@
 FROM docker.io/centos:7
 
 RUN yum update -y
-RUN yum install -y git procps logrotate mariadb mariadb-devel gcc wget sudo vim
+RUN yum install -y git procps logrotate mariadb mariadb-* gcc wget sudo vim
 RUN wget -O /etc/yum.repos.d/htcondor-stable-rhel7.repo http://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
 RUN wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor
@@ -11,7 +11,7 @@ RUN sed -i '1 s/\#\!\/usr\/bin\/python/\#\!\/usr\/bin\/python2/' /usr/bin/*
 RUN sed -i '1 s/\/usr\/bin\/python/\/usr\/bin\/python2/' /usr/libexec/urlgrabber-ext-down
 RUN yum install -y python3 python3-devel
 
-#RUN mysql_install_db --ldata=/var/lib/mysql
+#RUN sudo mysql_install_db --user=mysql --ldata=/var/lib/mysql
 #RUN chown -R mysql:mysql /var/lib/mysql
 #COPY mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
 

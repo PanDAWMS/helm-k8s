@@ -57,6 +57,6 @@ spec:
           configMap:
             name: sysconfig-config
       restartPolicy: Always
-      dnsConfig:
-        nameservers:
-          - {{ .Values.DNSserver }}
+#      dnsConfig:
+#        nameservers:
+#          - {{ .Values.DNSserver }}

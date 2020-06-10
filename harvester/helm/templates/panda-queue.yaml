@@ -6,4 +6,4 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: panda-queue
+  name: {{ .Release.Name }}-queueconfig

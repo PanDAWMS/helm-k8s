@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harvester-deployment
+  name: {{ .Release.Name }}-harvester
   annotations:
     helm.sh/hook: post-install
     helm.sh/hook-weight: "10"
   labels:
-    app: harvester
+    app: pandacore
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: harvester
+      app: pandacore
   template:
     metadata:
       name: harvester-pod
       labels:
-        app: harvester
+        app: pandacore
     spec:
+      hostname: harvester
+      subdomain: pandacore
       containers:
         - name: harvester-container
           image: pandawms/harvester:centos7
@@ -42,21 +44,23 @@ spec:
             - configMap:
                 name: panda-common
             - configMap:
-                name: panda-harvester
+                name: {{ .Release.Name }}-harvester-cfg
             - configMap:
-                name: panda-queue
+                name: {{ .Release.Name }}-queueconfig
             - configMap:
-                name: panda-uwsgi
+                name: {{ .Release.Name }}-uwsgi
             - configMap:
-                name: panda-logroate
+                name: {{ .Release.Name }}-logroate
             - configMap:
-                name: submitter-config
+                name: {{ .Release.Name }}-submitter-config
             - secret:
-                name: proxy-file
+                name: {{ .Release.Name }}-proxy-file
         - name: sysconfig-config
           configMap:
-            name: sysconfig-config
+            name: {{ .Release.Name }}-sysconfig
       restartPolicy: Always
-#      dnsConfig:
-#        nameservers:
-#          - {{ .Values.DNSserver }}
+{{- if .Values.DNSserver }}
+      dnsConfig:
+        nameservers:
+          - {{ .Values.DNSserver }}
+{{- end }}

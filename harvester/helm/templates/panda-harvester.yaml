@@ -55,17 +55,20 @@ data:
     useMySQLdb = True
 
     # user name for MariaDB. N/A for sqlite
-    user = harvester
+    user = {{ .Values.database.user }}
 
     # password for MariaDB. N/A for sqlite
-    password = {{ .Values.mariadb.Password }}
+    password = {{ .Values.database.password }}
 
     # schema for MariaDB. N/A for sqlite
-    schema = HARVESTER
+    schema = {{ .Values.database.schema }}
 
     # host name for MariaDB. N/A for sqlite
-    host = {{ .Values.mariadb.clusterIP }}
-
+{{ if .Values.mariadb.deploy }}
+    host = mariadb.pandacore
+{{- else }}
+    host = {{ .Values.database.host }}
+{{- end }}
     # port number for MariaDB. N/A for sqlite
     port = 3306
 
@@ -841,4 +844,4 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: panda-harvester
+  name: {{ .Release.Name }}-harvester-cfg

@@ -3,14 +3,18 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-#DNSserver: # optional if you need it.
-
+proxy: aa
 uname: harvester
 gname: harvester
 harvester_id: boxed_test_02
 ProxyPath: /usr/etc/panda/proxy
+database:
+  host: 
+  user:
+  paswword:
+  schema:
 
 mariadb:
-  clusterIP: 10.96.0.101 # must be in subnet of K8s cluster.
+  deploy: false
   RootPassword: FIXME
-  Password: FIXME
+DNSserver: # optional if you need it.

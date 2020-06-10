@@ -31,4 +31,4 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: panda-uwsgi
+  name: {{ .Release.Name }}-uwsgi

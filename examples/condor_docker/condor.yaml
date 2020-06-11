@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: condor
+  labels:
+    app: condor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: condor
+  template:
+    metadata:
+      labels:
+        app: condor
+    spec:
+      containers:
+        - name: condor-container
+          image: handson123/condor
+          imagePullPolicy: Always
+          command: ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
+#          args:
+#            - tail -f /dev/null
+      restartPolicy: Always

@@ -33,7 +33,7 @@ COPY panda_harvester etc/sysconfig/panda_harvester
 COPY panda_harvester-uwsgi.ini etc/panda/panda_harvester-uwsgi.ini
 COPY panda_harvester-uwsgi etc/rc.d/init.d/panda_harvester-uwsgi
 COPY panda_common.cfg etc/panda/panda_common.cfg
-COPY harvester-admin local/local/bin/harvester-admin
+COPY harvester-admin local/bin/harvester-admin
 
 RUN ln -s /mnt/panda_harvester.cfg /usr/etc/panda/panda_harvester.cfg
 RUN ln -s /mnt/panda_queueconfig /usr/etc/panda/panda_queueconfig

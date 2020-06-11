@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: condor
+  labels:
+    app: condor
+spec:
+  serviceName: "pandacore"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pandacore
+  template:
+    metadata:
+      labels:
+        app: pandacore
+    spec:
+      containers:
+        - name: condor-container
+          image: handson123/condor
+          imagePullPolicy: Always
+#          command: ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
+          command: ["/usr/bin/bash","-c"]
+          args:
+            - groupadd -g {{ .Values.GID }} {{ .Values.gname }};
+              useradd -g {{ .Values.GID }} -u {{ .Values.UID }} {{ .Values.uname }};
+              mkdir /etc/grid-security;
+              ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
+              supervisord -c /etc/supervisord.conf
+          volumeMounts:
+            - name: condor-config
+              mountPath: /etc/condor/config.d
+            - name: sharedfs
+              mountPath: /sharedfs
+            - name: cvmfs-cms
+              mountPath: /cvmfs/cms.cern.ch
+            - name: cvmfs-atlas
+              mountPath: /cvmfs/atlas.cern.ch
+      volumes:
+        - name: condor-config
+          configMap:
+            name: condor-config 
+        - name: sharedfs
+          hostPath:
+            path: /var/sharedfs
+            type: Directory
+        - name: cvmfs-cms
+          persistentVolumeClaim:
+            claimName: csi-cvmfs-cms-pvc
+            readOnly: true
+        - name: cvmfs-atlas
+          persistentVolumeClaim:
+            claimName: csi-cvmfs-atlas-pvc
+            readOnly: true
+      restartPolicy: Always

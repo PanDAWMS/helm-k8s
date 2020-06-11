@@ -1,0 +1,22 @@
+# Default values for harvester-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+uname: atlpan
+gname: zp
+UID: 29817
+GID: 1307
+harvester_id: boxed_test_03
+ProxyPath: /sharedfs/proxy/x509up_u25606_prod
+database:
+  host: aipanda083.cern.ch
+  port: 33306
+  user: harvester
+  password: harv-K8S_Helm
+  schema: HARVESTER
+
+mariadb:
+  deploy: false
+  RootPassword: FIXME
+DNSserver: # optional if you need it.

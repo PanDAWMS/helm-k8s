@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-harvester
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "10"
+  labels:
+    app: pandacore
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: pandacore
+  template:
+    metadata:
+      name: harvester-pod
+      labels:
+        app: pandacore
+    spec:
+      hostname: harvester
+      subdomain: pandacore
+      nodeSelector:
+          app: pandacore
+      containers:
+        - name: harvester-container
+          image: pandawms/harvester:centos7
+          imagePullPolicy: Always
+          command: ["/bin/sh"]
+          args:
+            -  harvester_start.sh
+          env:
+          - name: RESTART_CYCLE
+            value: '86400'
+          volumeMounts:
+          - name: panda-config
+            mountPath: /usr/etc/panda
+            readOnly: False
+          - name: sysconfig-config
+            mountPath: /usr/etc/sysconfig
+            readOnly: True
+          - name: sharedfs
+            mountPath: /sharedfs
+            readOnly: False
+          - name: cvmfs
+            mountPath: /cvmfs/cms.cern.ch
+            readOnly: True
+      volumes:
+        - name: panda-config
+          projected:
+            sources:
+            - configMap:
+                name: {{ .Release.Name }}-common
+            - configMap:
+                name: {{ .Release.Name }}-harvester-cfg
+            - configMap:
+                name: {{ .Release.Name }}-queueconfig
+            - configMap:
+                name: {{ .Release.Name }}-uwsgi
+            - configMap:
+                name: {{ .Release.Name }}-logroate
+            - configMap:
+                name: {{ .Release.Name }}-submitter-config
+            - secret:
+                name: atlas-proxy
+        - name: sysconfig-config
+          configMap:
+            name: {{ .Release.Name }}-sysconfig
+        - name: sharedfs
+          hostPath:
+            path: /var/sharedfs
+            type: Directory
+        - name: cvmfs
+          persistentVolumeClaim:
+            claimName: csi-cvmfs-cms-pvc
+            readOnly: true
+      restartPolicy: Always
+{{- if .Values.DNSserver }}
+      dnsConfig:
+        nameservers:
+          - {{ .Values.DNSserver }}
+{{- end }}

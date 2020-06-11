@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  submitter-config: submitter-config
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: {{ .Release.Name }}-submitter-config

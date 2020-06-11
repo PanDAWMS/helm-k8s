@@ -23,5 +23,5 @@ data:
     export HARVESTER_WATCHER_PASSPHRASE=FIXME_FIXME_FIXME
 kind: ConfigMap
 metadata:
-  name: sysconfig-config
+  name: {{ .Release.Name }}-sysconfig
   creationTimestamp: null 

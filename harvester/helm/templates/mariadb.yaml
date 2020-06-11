@@ -1,23 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mariadb
+  name: pandacore
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-weight: "1"
 spec:
-  ports:
-  - port: 3306
   selector:
-    app: mariadb
-  clusterIP: {{ .Values.mariadb.clusterIP }}
+    app: pandacore
+  clusterIP: None
 
 ---
-
+{{ if .Values.mariadb.deploy }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mariadb
+  name: {{ .Release.Name }}-mariadb
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-weight: "2"
@@ -30,12 +28,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mariadb
+      app: pandacore
   template:
     metadata:
       labels:
-        app: mariadb
+        app: pandacore
     spec:
+      hostname: mariadb
+      subdomain: pandacore
       containers:
       - name: mariadb
         image: mariadb:latest
@@ -44,11 +44,11 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: {{ .Values.mariadb.RootPassword }}
         - name: MYSQL_DATABASE
-          value: HARVESTER
+          value: {{ .Values.database.schema }}
         - name: MYSQL_USER
-          value: harvester
+          value: {{ .Values.database.user }}
         - name: MYSQL_PASSWORD
-          value: {{ .Values.mariadb.Password }}
+          value: {{ .Values.database.password }}
         ports:
         - containerPort: 3306
-
+{{ end }}

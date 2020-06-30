@@ -26,10 +26,11 @@ spec:
               useradd -g {{ .Values.GID }} -u {{ .Values.UID }} {{ .Values.uname }};
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
+              ln -s /mnt/condor/config.d/condor_config.local /etc/condor/config.d/condor_config.local;
               supervisord -c /etc/supervisord.conf
           volumeMounts:
             - name: condor-config
-              mountPath: /etc/condor/config.d
+              mountPath: /mnt/condor/config.d
             - name: sharedfs
               mountPath: /sharedfs
             - name: cvmfs-cms

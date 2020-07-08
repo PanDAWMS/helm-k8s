@@ -11,8 +11,11 @@ RUN yum clean all
 RUN yum update -y
 RUN yum install -y condor-cream-gahp condor-all 
 RUN yum install -y supervisor 
-COPY condor_config.local /etc/condor/config.d/condor_config.local 
+#COPY condor_config.local /etc/condor/config.d/condor_config.local 
 COPY supervisord.conf /etc/supervisord.conf
+RUN mv /sbin/cream_gahp /sbin/cream_gahp.bak
+COPY cream_gahp /sbin/cream_gahp
+COPY libclassad.so.8 /usr/lib64/libclassad.so.8
 
 Entrypoint /usr/bin/supervisord -c
 CMD /etc/supervisord.conf

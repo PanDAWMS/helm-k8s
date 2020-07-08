@@ -1,7 +1,7 @@
 FROM docker.io/centos:7
 
 RUN yum update -y
-RUN yum install -y git procps logrotate gcc wget sudo vim
+RUN yum install -y git procps logrotate gcc wget sudo vim mariadb-*
 RUN wget -O /etc/yum.repos.d/htcondor-stable-rhel7.repo http://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
 RUN wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor

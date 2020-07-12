@@ -7,14 +7,14 @@ uname: atlpan
 gname: zp
 UID: 29817
 GID: 1307
-harvester_id: boxed_test_03
+harvester_id: FIXME
 ProxyPath: /sharedfs/proxy/x509up_u25606_prod
 database:
-  host: aipanda083.cern.ch
-  port: 33306
-  user: harvester
-  password: harv-K8S_Helm
-  schema: HARVESTER
+  host: FIXME
+  port: FIXME
+  user: FIXME
+  password: FIXME
+  schema: FIXME
 
 mariadb:
   deploy: false

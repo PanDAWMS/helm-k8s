@@ -1,25 +1,20 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-harvester
-  annotations:
-    helm.sh/hook: post-install
-    helm.sh/hook-weight: "10"
   labels:
     app: pandacore
 spec:
   replicas: {{ .Values.replicaCount }}
+  serviceName: "pandacore"
   selector:
     matchLabels:
       app: pandacore
   template:
     metadata:
-      name: harvester-pod
       labels:
         app: pandacore
     spec:
-      hostname: harvester
-      subdomain: pandacore
       containers:
         - name: harvester-container
           image: pandawms/harvester:centos7
@@ -37,12 +32,21 @@ spec:
           - name: sysconfig-config
             mountPath: /usr/etc/sysconfig
             readOnly: True
+          - name: sharedfs
+            mountPath: /sharedfs
+            readOnly: False
+          - name: cvmfs-cms
+            mountPath: /cvmfs/cms.cern.ch
+            readOnly: True
+          - name: cvmfs-atlas
+            mountPath: /cvmfs/atlas.cern.ch
+            readOnly: True
       volumes:
         - name: panda-config
           projected:
             sources:
             - configMap:
-                name: panda-common
+                name: {{ .Release.Name }}-common
             - configMap:
                 name: {{ .Release.Name }}-harvester-cfg
             - configMap:
@@ -53,14 +57,25 @@ spec:
                 name: {{ .Release.Name }}-logroate
             - configMap:
                 name: {{ .Release.Name }}-submitter-config
-            - secret:
-                name: {{ .Release.Name }}-proxy-file
         - name: sysconfig-config
           configMap:
             name: {{ .Release.Name }}-sysconfig
+        - name: sharedfs
+          hostPath:
+            path: /var/sharedfs
+            type: Directory
+        - name: cvmfs-cms
+          persistentVolumeClaim:
+            claimName: csi-cvmfs-cms-pvc
+            readOnly: true
+        - name: cvmfs-atlas
+          persistentVolumeClaim:
+            claimName: csi-cvmfs-atlas-pvc
+            readOnly: true
       restartPolicy: Always
 {{- if .Values.DNSserver }}
       dnsConfig:
         nameservers:
           - {{ .Values.DNSserver }}
 {{- end }}
+

@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: condor
+  name: {{ .Release.Name }}-condor
   labels:
     app: condor
 spec:
   serviceName: "pandacore"
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: pandacore
@@ -22,7 +22,8 @@ spec:
 #          command: ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
           command: ["/usr/bin/bash","-c"]
           args:
-            - groupadd -g {{ .Values.GID }} {{ .Values.gname }};
+            - export init_id=`cat /mnt/init/SCHEDD_CLUSTER_INITIAL_VALUE`;
+              groupadd -g {{ .Values.GID }} {{ .Values.gname }};
               useradd -g {{ .Values.GID }} -u {{ .Values.UID }} {{ .Values.uname }};
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
@@ -37,6 +38,26 @@ spec:
               mountPath: /cvmfs/cms.cern.ch
             - name: cvmfs-atlas
               mountPath: /cvmfs/atlas.cern.ch
+            - name: init-dir
+              mountPath: /mnt/init
+      initContainers:
+        - name: condor-init
+          image: handson123/initcondor
+          imagePullPolicy: Always
+          env:
+            - name: DB_HOST
+              value: {{ .Values.database.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: DB_USER
+              value: {{ .Values.database.user | quote }}
+            - name: DB_PASSWORD
+              value: {{ .Values.database.password | quote }}
+            - name: DB_SCHEMA
+              value: {{ .Values.database.schema | quote }}
+          volumeMounts:
+            - name: init-dir
+              mountPath: "/mnt/init"
       volumes:
         - name: condor-config
           configMap:
@@ -53,4 +74,6 @@ spec:
           persistentVolumeClaim:
             claimName: csi-cvmfs-atlas-pvc
             readOnly: true
+        - name: init-dir
+          emptyDir: {}
       restartPolicy: Always

@@ -1,27 +1,20 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-harvester
-  annotations:
-    helm.sh/hook: post-install
-    helm.sh/hook-weight: "10"
   labels:
     app: pandacore
 spec:
   replicas: {{ .Values.replicaCount }}
+  serviceName: "pandacore"
   selector:
     matchLabels:
       app: pandacore
   template:
     metadata:
-      name: harvester-pod
       labels:
         app: pandacore
     spec:
-      hostname: harvester
-      subdomain: pandacore
-      nodeSelector:
-          app: pandacore
       containers:
         - name: harvester-container
           image: pandawms/harvester:centos7
@@ -38,12 +31,6 @@ spec:
             readOnly: False
           - name: sysconfig-config
             mountPath: /usr/etc/sysconfig
-            readOnly: True
-          - name: sharedfs
-            mountPath: /sharedfs
-            readOnly: False
-          - name: cvmfs
-            mountPath: /cvmfs/cms.cern.ch
             readOnly: True
       volumes:
         - name: panda-config
@@ -62,21 +49,14 @@ spec:
             - configMap:
                 name: {{ .Release.Name }}-submitter-config
             - secret:
-                name: atlas-proxy
+                name: {{ .Release.Name }}--proxy-file
         - name: sysconfig-config
           configMap:
             name: {{ .Release.Name }}-sysconfig
-        - name: sharedfs
-          hostPath:
-            path: /var/sharedfs
-            type: Directory
-        - name: cvmfs
-          persistentVolumeClaim:
-            claimName: csi-cvmfs-cms-pvc
-            readOnly: true
       restartPolicy: Always
 {{- if .Values.DNSserver }}
       dnsConfig:
         nameservers:
           - {{ .Values.DNSserver }}
 {{- end }}
+

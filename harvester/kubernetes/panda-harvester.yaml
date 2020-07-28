@@ -841,4 +841,4 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: panda-harvester
+  name: panda-harvester-cfg

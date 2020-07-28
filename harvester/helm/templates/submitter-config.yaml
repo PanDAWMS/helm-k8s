@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  submitter-config: submitter-config
-kind: ConfigMap
-metadata:
-  creationTimestamp: null
-  name: submitter-config

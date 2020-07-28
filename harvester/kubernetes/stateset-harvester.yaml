@@ -1,19 +1,19 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: harvester-deployment
+  name: production-harvester
   labels:
-    app: harvester
+    app: pandacore
 spec:
   replicas: FIXME
+  serviceName: "pandacore"
   selector:
     matchLabels:
-      app: harvester
+      app: pandacore
   template:
     metadata:
-      name: harvester-pod
       labels:
-        app: harvester
+        app: pandacore
     spec:
       containers:
         - name: harvester-container
@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: Always
           command: ["/bin/sh"]
           args:
-            - harvester_start.sh
+            -  harvester_start.sh
           env:
           - name: RESTART_CYCLE
             value: '86400'
@@ -39,21 +39,18 @@ spec:
             - configMap:
                 name: panda-common
             - configMap:
-                name: panda-harvester
+                name: panda-harvester-cfg
             - configMap:
-                name: panda-queue
+                name: panda-queueconfig
             - configMap:
                 name: panda-uwsgi
             - configMap:
                 name: panda-logroate
             - configMap:
-                name: submitter-config
+                name: panda-submitter-config
             - secret:
                 name: proxy-file
         - name: sysconfig-config
           configMap:
-            name: sysconfig-config
+            name: production-sysconfig
       restartPolicy: Always
-      dnsConfig:
-        nameservers:
-          - FIXME

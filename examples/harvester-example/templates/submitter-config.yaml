@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   condorHostConfig: |+
     {
-            "condor-0.pandacore.default.svc.cluster.local": {
+            "{{ .Release.Name }}-condor-0.pandacore.default.svc.cluster.local": {
                     "pool": "condor-0.pandacore.default.svc.cluster.local:19618",
                     "weight": 1
             }

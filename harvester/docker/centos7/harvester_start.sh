@@ -8,6 +8,7 @@ do
   export HARVESTER_GID=`python -c 'from pandaharvester.harvesterconfig import harvester_config;print(harvester_config.master.gid)'`
   groupadd -g ${HARVESTER_GID} ${HARVESTER_GNAME} && \
   useradd -g ${HARVESTER_GID} -u ${HARVESTER_UID} ${HARVESTER_UNAME} && break
+  id ${HARVESTER_UNAME} |grep -e ${HARVESTER_UID} -e ${HARVESTER_GNAME} -e ${HARVESTER_GID} && break
   sleep 5
 done
 chown -R ${HARVESTER_UID}:${HARVESTER_GID} /var/log/panda

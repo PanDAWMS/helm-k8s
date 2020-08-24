@@ -13,7 +13,7 @@ RUN yum install -y condor-cream-gahp condor-all
 RUN yum install -y supervisor 
 RUN yum install -y fuse-sshfs
 RUN echo "user_allow_other" > /etc/fuse.conf  
-RUN yum insatll python3
+RUN yum install -y python3
 WORKDIR /opt
 RUN git clone https://github.com/PanDAWMS/HGCS.git
 RUN pip3 install --upgrade pip htcondor

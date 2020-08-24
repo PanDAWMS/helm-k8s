@@ -6,6 +6,9 @@ RUN wget -O /etc/yum.repos.d/htcondor-stable-rhel7.repo http://research.cs.wisc.
 RUN wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor
 RUN yum install -y condor
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum install -y fuse-sshfs
+RUN echo 'user_allow_other' > /etc/fuse.conf 
 RUN echo 'SEC_CLIENT_AUTHENTICATION_METHODS = FS, GSI, CLAIMTOBE' > /etc/condor/config.d/condor_config.local
 RUN sed -i '1 s/\#\!\/usr\/bin\/python/\#\!\/usr\/bin\/python2/' /usr/bin/*
 RUN sed -i '1 s/\/usr\/bin\/python/\/usr\/bin\/python2/' /usr/libexec/urlgrabber-ext-down
@@ -14,7 +17,7 @@ RUN yum install -y python3 python3-devel
 RUN rm /usr/bin/python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN pip3 install pip --upgrade
-RUN pip install --upgrade setuptools>=39.0.1
+RUN pip3 install --upgrade setuptools>=39.0.1
 RUN python3 -m pip install git+git://github.com/HSF/harvester.git#egg=pandaharvester[atlasgrid,kubernetes]
 
 COPY CERN-bundle.pem /etc/pki/tls/certs/CERN-bundle.pem

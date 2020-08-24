@@ -25,12 +25,25 @@ spec:
               requests:
                 cpu: 1
                 memory: 2Gi
-          command: ["/bin/sh"]
+          command: ["/usr/bin/bash","-c"]
           args:
-            -  harvester_start.sh
+            - groupadd -g {{ .Values.GID }} {{ .Values.gname }};
+              useradd -g {{ .Values.GID }} -u {{ .Values.UID }} {{ .Values.uname }};
+              chown -R {{ .Values.uname }}:{{ .Values.gname }} /var/log/panda;
+              echo {{ .Values.uname }} "ALL = (root) NOPASSWD:ALL" > /etc/sudoers.d/{{ .Values.uname }};
+              cp /k8s-secrets/atlpan_k8s_sharedfs_id_ecdsa /home/{{ .Values.uname }}/;
+              chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
+              chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
+              mkdir /sharedfs;
+              sshfs -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
+              sh /usr/harvester_start.sh
           env:
           - name: RESTART_CYCLE
             value: '86400'
+          - name: HARVESTER_UNAME
+            value: {{ .Values.uname }}
+          - name: HARVESTER_GNAME
+            value: {{ .Values.gname }}
           volumeMounts:
           - name: panda-config
             mountPath: /usr/etc/panda
@@ -38,15 +51,14 @@ spec:
           - name: sysconfig-config
             mountPath: /usr/etc/sysconfig
             readOnly: True
-          - name: sharedfs
-            mountPath: /sharedfs
-            readOnly: False
           - name: cvmfs-cms
             mountPath: /cvmfs/cms.cern.ch
             readOnly: True
           - name: cvmfs-atlas
             mountPath: /cvmfs/atlas.cern.ch
             readOnly: True
+          - name: sshkey
+            mountPath: /k8s-secrets
       volumes:
         - name: panda-config
           projected:
@@ -66,18 +78,17 @@ spec:
         - name: sysconfig-config
           configMap:
             name: {{ .Release.Name }}-sysconfig
-        - name: sharedfs
-          hostPath:
-            path: /var/sharedfs
-            type: Directory
         - name: cvmfs-cms
           persistentVolumeClaim:
-            claimName: csi-cvmfs-cms-pvc
+            claimName: {{ .Release.Name }}-csi-cvmfs-cms-pvc
             readOnly: true
         - name: cvmfs-atlas
           persistentVolumeClaim:
-            claimName: csi-cvmfs-atlas-pvc
+            claimName: {{ .Release.Name }}-csi-cvmfs-atlas-pvc
             readOnly: true
+        - name: sshkey
+          secret:
+            secretName: pre-sshkey
       restartPolicy: Always
 {{- if .Values.DNSserver }}
       dnsConfig:

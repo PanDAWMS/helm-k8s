@@ -30,21 +30,31 @@ spec:
             - export INIT_ID=`cat /mnt/init/SCHEDD_CLUSTER_INITIAL_VALUE`;
               groupadd -g {{ .Values.GID }} {{ .Values.gname }};
               useradd -g {{ .Values.GID }} -u {{ .Values.UID }} {{ .Values.uname }};
+              cp /k8s-secrets/atlpan_k8s_sharedfs_id_ecdsa /home/{{ .Values.uname }}/;
+              chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
+              chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
+              mkdir /sharedfs;
+              sshfs -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
               ln -s /mnt/condor/config.d/condor_config.local /etc/condor/config.d/condor_config.local;
               supervisord -c /etc/supervisord.conf
+          env:
+          - name: CONDORUSER
+            value: {{ .Values.uname }}
+          - name: CONDORGROUP
+            value: {{ .Values.gname }}
           volumeMounts:
             - name: condor-config
               mountPath: /mnt/condor/config.d
-            - name: sharedfs
-              mountPath: /sharedfs
             - name: cvmfs-cms
               mountPath: /cvmfs/cms.cern.ch
             - name: cvmfs-atlas
               mountPath: /cvmfs/atlas.cern.ch
             - name: init-dir
               mountPath: /mnt/init
+            - name: sshkey
+              mountPath: /k8s-secrets
       initContainers:
         - name: condor-init
           image: handson123/initcondor
@@ -67,10 +77,6 @@ spec:
         - name: condor-config
           configMap:
             name: {{ .Release.Name }}-condor-config 
-        - name: sharedfs
-          hostPath:
-            path: /var/sharedfs
-            type: Directory
         - name: cvmfs-cms
           persistentVolumeClaim:
             claimName: csi-cvmfs-cms-pvc
@@ -81,6 +87,9 @@ spec:
             readOnly: true
         - name: init-dir
           emptyDir: {}
+        - name: sshkey
+          secret:
+            secretName: pre-sshkey
       restartPolicy: Always
 {{- if .Values.DNSserver }}
       dnsConfig:

@@ -7,18 +7,6 @@ provisioner: cvmfs.csi.cern.ch
 parameters:
   repository: cms.cern.ch
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: csi-cvmfs-cms-pvc
-spec:
-  accessModes:
-  - ReadOnlyMany
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: csi-cvmfs-cms
----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -27,10 +15,23 @@ provisioner: cvmfs.csi.cern.ch
 parameters:
   repository: atlas.cern.ch
 ---
+{{ end }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-atlas-pvc
+  name: {{ .Release.Name }}-csi-cvmfs-cms-pvc
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-cms
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-csi-cvmfs-atlas-pvc
 spec:
   accessModes:
   - ReadOnlyMany
@@ -38,4 +39,3 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: csi-cvmfs-atlas
-{{ end }}

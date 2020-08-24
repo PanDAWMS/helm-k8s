@@ -17,7 +17,7 @@ set -a
 #======= START CONFIGURATION SECTION ==========================
 # user and group to run harvester uWSGI
 userName=${HARVESTER_UNAME}
-groupName=${HARVESTER_GAME}
+groupName=${HARVESTER_GNAME}
 
 # setup python and virtual env
 VIRTUAL_ENV=/usr

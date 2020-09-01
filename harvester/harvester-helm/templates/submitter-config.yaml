@@ -1,7 +1,14 @@
 apiVersion: v1
-data:
-  proxy: cHJveHkgZmlsZQ==
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: {{ .Release.Name }}-submitter-config
+data:
+{{ (.Files.Glob "submitter-config/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-submitter-proxy
+type: Opaque
+data:
+{{ (.Files.Glob "secret/*").AsSecrets | indent 2 }}

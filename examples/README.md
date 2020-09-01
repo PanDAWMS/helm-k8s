@@ -9,3 +9,7 @@ NFS should mount on all node of Kubernetes cluster at the same path "/var/shared
 
 And set the uid/gid of the directory of NFS the same with "value.yaml" parameter.
 
+# atlas production
+This example need csi-cvmfs driver and sshfs.
+
+Use sshfs to be the sharedfs between harvester and condor.

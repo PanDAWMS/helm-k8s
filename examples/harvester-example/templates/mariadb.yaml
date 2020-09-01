@@ -35,7 +35,7 @@ spec:
         app: pandacore
     spec:
       hostname: mariadb
-      subdomain: pandacore
+      subdomain: {{ .Values.domain }}
       containers:
       - name: mariadb
         image: mariadb:latest

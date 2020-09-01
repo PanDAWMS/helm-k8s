@@ -11,8 +11,14 @@ data:
     # user name of the daemon process
     uname = {{ .Values.uname }}
 
+    # uid of the daemon process
+    uid = {{ .Values.UID }}
+
     # group name of the daemon process
     gname = {{ .Values.gname }}
+
+    # gid of the daemon process
+    gid = {{ .Values.GID }}
 
     # logger name
     loggername = harvester
@@ -24,7 +30,7 @@ data:
     debugger_port = 19550
 
     # capability to dynamically change plugins
-    dynamic_plugin_change = False
+    dynamic_plugin_change = True
 
 
 
@@ -40,13 +46,13 @@ data:
     database_filename = FIXME
 
     # verbose
-    verbose = False
+    verbose = True
 
     # use inspect for decorator of verbose messages
     useInspect = False
 
     # number of database connections in each process
-    nConnections = 10
+    nConnections = 20
 
     # database engine : sqlite or mariadb
     engine = mariadb
@@ -65,12 +71,12 @@ data:
 
     # host name for MariaDB. N/A for sqlite
 {{ if .Values.mariadb.deploy }}
-    host = mariadb.pandacore
+    host = mariadb.{{ .Values.domain }}
 {{- else }}
     host = {{ .Values.database.host }}
 {{- end }}
     # port number for MariaDB. N/A for sqlite
-    port = 3306
+    port = {{ .Values.database.port }}
 
 
 
@@ -83,15 +89,21 @@ data:
     [fifo]
 
     # module and class names to provide the fifo queue
-    fifoModule = pandaharvester.harvesterfifo.sqlite_fifo
-    fifoClass = SqliteFifo
-
+{{ if .Values.fifo_database.enable }}
+    fifoModule = pandaharvester.harvesterfifo.mysql_fifo
+    fifoClass = MysqlFifo
+    db_host = {{ .Values.fifo_database.host }}
+    db_port = {{ .Values.fifo_database.port }}
+    db_user = {{ .Values.fifo_database.user }}
+    db_password = {{ .Values.fifo_database.password }}
+    db_schema = {{ .Values.fifo_database.schema }}
+{{- end }}
     # database filename for sqlite fifo plugin
     # must be different from main Harvester DB and other fifo DBs if using sqlite
     # different db filenames for fifos of different titles
     # a titile can be named after a harvester agent (e.g. monitor) or other special components
     # placeholder $(TITLE) should be used in filename; it will then be changed to the title name
-    database_filename = /dev/shm/$(TITLE)_fifo.db
+    #database_filename = /dev/shm/$(TITLE)_fifo.db
 
 
 
@@ -110,7 +122,7 @@ data:
     className = PandaCommunicator
 
     # number of connections
-    nConnections = 5
+    nConnections = 10
 
 
 
@@ -146,12 +158,13 @@ data:
 
     # base URL for write access to log cache server
     #pandaCacheURL_W = https://aipanda011.cern.ch:25443/server/panda
-    pandaCacheURL_W = https://aipanda047.cern.ch:25443/server/panda
-
+    #pandaCacheURL_W = https://aipanda047.cern.ch:25443/server/panda
+    pandaCacheURL_W = https://pandacache.cern.ch:25443/server/panda
 
     # base URL for read access to log cache server
     #pandaCacheURL_R = https://aipanda011.cern.ch:25443/cache
-    pandaCacheURL_R = https://aipanda047.cern.ch:25443/cache
+    #pandaCacheURL_R = https://aipanda047.cern.ch:25443/cache
+    pandaCacheURL_R = https://pandacache.cern.ch:25443/cache
 
     # verbose
     verbose = False
@@ -354,7 +367,6 @@ data:
     #
 
     [monitor]
-
     # number of threads
     nThreads = 3
 
@@ -364,6 +376,76 @@ data:
     # lock interval in sec
     lockInterval = 600
 
+{{ if .Values.fifo_database.enable }}
+    # check interval in sec
+    checkInterval = 3600
+   
+    # timeout in sec to give up checking if it keeps failing
+    checkTimeout = 3600
+   
+    # sleep interval in sec
+    sleepTime = 3600
+   
+    # whether to use fifo
+    fifoEnable = True
+   
+    # sleep interval in millisecond using fifo
+    fifoSleepTimeMilli = 500
+   
+    # check interval in fifo in sec
+    fifoCheckInterval = 1800
+   
+    # check duration of a fifo cycle in sec
+    fifoCheckDuration = 15
+   
+    # max number of workers to be populated into the fifo queue
+    #fifoMaxWorkersToPopulate = 10000
+   
+    # max number of workers in a chunk to enqueue
+    fifoMaxWorkersPerChunk = 600
+   
+    # interval of force enqueue in sec
+    fifoForceEnqueueInterval = 10800
+   
+    # max interval in sec a post-processing worker can preempt in fifo
+    fifoMaxPreemptInterval = 60
+   
+    # plugin cache parameters (used if monitor plugin supports)
+    pluginCacheEnable = True
+    pluginCacheRefreshInterval = 300
+   
+    # workers will be killed if stuck queuing (submitted) for longer than this
+    workerQueueTimeLimit = 172800
+   
+    # enable event-based monitor check. Only works when fifoEnable is True
+    eventBasedEnable = True
+   
+    # list of plugins for event-based check. Mandatory when eventBasedEnable is True
+    eventBasedPlugins =
+      [
+       {
+          "module": "pandaharvester.harvestermonitor.htcondor_monitor",
+          "name": "HTCondorMonitor",
+          "condorHostConfig_list": [
+              "/usr/etc/panda/condorHostConfig"
+            ]
+        }
+      ]
+    # interval of event-based check to query with plugin, in sec
+    eventBasedCheckInterval = 300
+   
+    # time window of event-based check to check within, in sec
+    eventBasedTimeWindow = 450
+   
+    # max number of events of event-based check to handle in one cycle
+    eventBasedCheckMaxEvents = 500
+   
+    # lifetime of an event in event-based check, in sec
+    eventBasedEventLifetime = 1800
+   
+    # max number of expired events to remove in one cycle
+    eventBasedRemoveMaxEvents = 2000
+{{- else }}
     # check interval in sec
     checkInterval = 300
 
@@ -398,7 +480,7 @@ data:
     fifoMaxPreemptInterval = 60
 
     # plugin cache parameters (used if monitor plugin supports)
-    #pluginCacheEnable = True
+    pluginCacheEnable = False
     #pluginCacheRefreshInterval = 300
 
     # workers will be killed if stuck queuing (submitted) for longer than this
@@ -426,10 +508,10 @@ data:
 
     # max number of expired events to remove in one cycle
     #eventBasedRemoveMaxEvents = 2000
+{{- end }}
 
     # timeout for post-processing in minutes. 0 to give up immediately
     postProcessTimeout = 0
-
 
 
 
@@ -447,32 +529,22 @@ data:
     # module name
     moduleName =
      pandaharvester.harvestercredmanager.dummy_cred_manager
-     #pandaharvester.harvestercredmanager.no_voms_cred_manager
-     #pandaharvester.harvestercredmanager.no_voms_cred_manager
 
     # class name
     className =
      DummyCredManager
-     #NoVomsCredManager
-     #NoVomsCredManager
 
     # original certificate file to generate new short-lived certificate
     inCertFile =
      unused
-     #/path_to/FIXME_original_cert_for_proxy_with_production_role
-     #/path_to/FIXME_original_cert_for_proxy_with_pilot_role
 
     # the name of short-lived certificate
     outCertFile =
      unused
-     #/path_to/FIXME_proxy_production
-     #/path_to/FIXME_proxy_pilot
 
     # voms
     voms =
      unused
-     #atlas:/atlas/Role=production
-     #atlas:/atlas/Role=pilot
 
     # sleep interval in sec
     sleepTime = 1800
@@ -788,7 +860,7 @@ data:
     # APF monitoring parameters
     #
     [apfmon]
-    active = False
+    active = True
 
     ##########################
     #

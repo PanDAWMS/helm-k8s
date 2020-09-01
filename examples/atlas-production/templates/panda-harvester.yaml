@@ -71,7 +71,7 @@ data:
 
     # host name for MariaDB. N/A for sqlite
 {{ if .Values.mariadb.deploy }}
-    host = mariadb.pandacore
+    host = mariadb.{{ .Values.domain }}
 {{- else }}
     host = {{ .Values.database.host }}
 {{- end }}

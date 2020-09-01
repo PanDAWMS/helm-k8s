@@ -3,18 +3,29 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-proxy: aa
-uname: harvester
-gname: harvester
-harvester_id: boxed_test_02
-ProxyPath: /usr/etc/panda/proxy
+uname: FIXME
+gname: FIXME
+UID: FIXME
+GID: FIXME
+domain: pandacore
+harvester_id: FIXME
+ProxyPath: FIXME
 database:
+  host: FIXME
+  port: FIXME
+  user: FIXME
+  password: FIXME
+  schema: FIXME
+fifo_database:
+  enable: false
   host: 
-  user:
-  paswword:
-  schema:
+  port: 
+  user: 
+  password: 
+  schema: 
+
 
 mariadb:
   deploy: false
-  RootPassword: FIXME
+  RootPassword: 
 DNSserver: # optional if you need it.

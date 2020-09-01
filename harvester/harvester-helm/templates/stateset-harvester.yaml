@@ -3,17 +3,17 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-harvester
   labels:
-    app: pandacore
+    app: {{ .Values.domain }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  serviceName: "pandacore"
+  serviceName: {{ .Values.domain | quote }}
   selector:
     matchLabels:
-      app: pandacore
+      app: {{ .Values.domain }}
   template:
     metadata:
       labels:
-        app: pandacore
+        app: {{ .Values.domain }}
     spec:
       containers:
         - name: harvester-container

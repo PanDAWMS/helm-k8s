@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   proxy: cHJveHkgZmlsZQ==
-kind: Secret
+kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: {{ .Release.Name }}-submitter-config

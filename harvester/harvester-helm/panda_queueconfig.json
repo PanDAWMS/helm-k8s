@@ -1,0 +1,60 @@
+"FIXME_QUEUE": {
+    "queueStatus": "online",
+    "prodSourceLabel": "managed",
+    "nQueueLimitWorkerRatio": 50,
+    "nQueueLimitWorkerMin": 100,
+    "nQueueLimitWorkerMax": 10000,
+    "maxWorkers": 10,
+    "maxNewWorkersPerCycle": 100,
+    "mapType": "NoJob",
+    "truePilot": true,
+    "maxSubmissionAttempts": 3,
+    "walltimeLimit": 1209600,
+    "prefetchEvents": false,
+    "preparator": {
+      "name": "DummyPreparator",
+      "module": "pandaharvester.harvesterpreparator.dummy_preparator"
+    },
+    "submitter": {
+      "name": "HTCondorSubmitter",
+      "module": "pandaharvester.harvestersubmitter.htcondor_submitter",
+      "useSpool": false,
+      "useAtlasGridCE": false,
+      "useAtlasAGIS": true,
+      "templateFile": "/cephfs/atlpan/harvester/harvester_common/CERN_central_1/cloudscheduler-pilot2.sdf",
+      "executableFile": "/cephfs/atlpan/harvester/harvester_common/CERN_central_1/runpilot2-wrapper.sh",
+      "logDir": "/data/atlpan/condor_logs",
+      "logBaseURL": "https://aipanda177.cern.ch/condor_logs",
+      "ceHostname": "aiatlas009.cern.ch",
+      "ceEndpoint": "aiatlas009.cern.ch",
+      "nProcesses": 8
+    },
+    "workerMaker": {
+      "name": "SimpleWorkerMaker",
+      "module": "pandaharvester.harvesterworkermaker.simple_worker_maker",
+      "jobAttributesToUse": [
+        "nCore"
+      ]
+    },
+    "messenger": {
+      "name": "SharedFileMessenger",
+      "module": "pandaharvester.harvestermessenger.shared_file_messenger",
+      "jobSpecFileFormat": "cgi",
+      "accessPoint": "/cephfs/atlpan/harvester/harvester_wdirs/${harvesterID}/${_workerID_3.2}/${_workerID_1.0}/${workerID}"
+    },
+    "stager": {
+      "name": "DummyStager",
+      "module": "pandaharvester.harvesterstager.dummy_stager"
+    },
+    "monitor": {
+      "name": "HTCondorMonitor",
+      "module": "pandaharvester.harvestermonitor.htcondor_monitor",
+      "cancelUnknown": false
+    },
+    "sweeper": {
+      "name": "HTCondorSweeper",
+      "module": "pandaharvester.harvestersweeper.htcondor_sweeper"
+    }
+}
+
+

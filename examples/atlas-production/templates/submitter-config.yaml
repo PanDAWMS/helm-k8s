@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   condorHostConfig: |+
     {
-{{- $count := .Values.replicaCount | int -}}
+{{- $count := .Values.condor_replica | int -}}
 {{- $releaseName := .Release.Name -}}
 {{- $domain := .Values.domain -}}
 {{- range $i, $e := until $count }}

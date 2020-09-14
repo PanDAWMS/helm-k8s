@@ -6,7 +6,7 @@ metadata:
     app: harvester
 spec:
   serviceName: {{ .Values.domain | quote }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.harvester_replica }}
   selector:
     matchLabels:
       app: {{ .Values.domain }}
@@ -35,7 +35,7 @@ spec:
               chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               mkdir /sharedfs;
-              sshfs -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
+              sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
               sh /usr/harvester_start.sh
           env:
           - name: RESTART_CYCLE

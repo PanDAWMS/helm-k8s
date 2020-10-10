@@ -10,6 +10,9 @@ data:
                     "pool": "{{ $releaseName }}-condor-{{ $i }}.{{ $domain }}.default.svc.cluster.local:19618",
                     "weight": 1
             }
+{{- if ne $i (sub $count 1) -}}
+            ,
+{{- end }}
 {{- end }}
     }
 

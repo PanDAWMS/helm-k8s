@@ -25,11 +25,5 @@ do
   mysql -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASSWORD} -e '\q' && break
   sleep 5
 done
-
-while true;
-do
-  /usr/etc/rc.d/init.d/panda_harvester-uwsgi start
-  sleep ${RESTART_CYCLE}
-  /usr/etc/rc.d/init.d/panda_harvester-uwsgi stop
-  logrotate /usr/etc/panda/panda_logroate
-done
+/usr/etc/rc.d/init.d/panda_harvester-uwsgi start
+/usr/bin/supervisord -c /etc/supervisord.conf

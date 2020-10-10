@@ -1,13 +1,14 @@
 FROM docker.io/centos:7
 
 RUN yum update -y
-RUN yum install -y git procps logrotate gcc wget sudo vim mariadb-*
+RUN yum install -y git procps logrotate gcc wget sudo vim mariadb-* crontabs
 RUN wget -O /etc/yum.repos.d/htcondor-stable-rhel7.repo http://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
 RUN wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor
 RUN yum install -y condor
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum install -y fuse-sshfs
+RUN yum install -y supervisor
 RUN echo 'user_allow_other' > /etc/fuse.conf 
 RUN echo 'SEC_CLIENT_AUTHENTICATION_METHODS = FS, GSI, CLAIMTOBE' > /etc/condor/config.d/condor_config.local
 RUN sed -i '1 s/\#\!\/usr\/bin\/python/\#\!\/usr\/bin\/python2/' /usr/bin/*
@@ -32,6 +33,7 @@ COPY panda_harvester-uwsgi.ini etc/panda/panda_harvester-uwsgi.ini
 COPY panda_harvester-uwsgi etc/rc.d/init.d/panda_harvester-uwsgi
 COPY panda_common.cfg etc/panda/panda_common.cfg
 COPY harvester-admin local/bin/harvester-admin
+COPY supervisord.conf /etc/supervisord.conf
 
 RUN ln -s /mnt/panda_harvester.cfg /usr/etc/panda/panda_harvester.cfg
 RUN ln -s /mnt/panda_queueconfig /usr/etc/panda/panda_queueconfig

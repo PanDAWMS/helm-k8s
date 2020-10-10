@@ -34,7 +34,7 @@ spec:
               chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               mkdir /sharedfs;
-              sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/
+              sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/ ;
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
               ln -s /mnt/condor/config.d/condor_config.local /etc/condor/config.d/condor_config.local;
@@ -79,11 +79,11 @@ spec:
             name: {{ .Release.Name }}-condor-config 
         - name: cvmfs-cms
           persistentVolumeClaim:
-            claimName: csi-cvmfs-cms-pvc
+            claimName: {{ .Release.Name }}-csi-cvmfs-cms-pvc
             readOnly: true
         - name: cvmfs-atlas
           persistentVolumeClaim:
-            claimName: csi-cvmfs-atlas-pvc
+            claimName: {{ .Release.Name }}-csi-cvmfs-atlas-pvc
             readOnly: true
         - name: init-dir
           emptyDir: {}

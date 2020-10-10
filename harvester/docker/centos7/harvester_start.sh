@@ -12,8 +12,6 @@ do
   sleep 5
 done
 chown -R ${HARVESTER_UID}:${HARVESTER_GID} /var/log/panda
-chown -R ${HARVESTER_UID}:${HARVESTER_GID} /var/log/harvester
-chown -R ${HARVESTER_UID}:${HARVESTER_GID} /harvester_wdirs
 echo ${HARVESTER_UNAME} "ALL = (root) NOPASSWD:ALL" > /etc/sudoers.d/${HARVESTER_UNAME}
 
 while true
@@ -26,4 +24,5 @@ do
   sleep 5
 done
 /usr/etc/rc.d/init.d/panda_harvester-uwsgi start
+unset PYTHONPATH 
 /usr/bin/supervisord -c /etc/supervisord.conf

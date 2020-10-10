@@ -72,11 +72,13 @@ data:
     # host name for MariaDB. N/A for sqlite
 {{ if .Values.mariadb.deploy }}
     host = mariadb.{{ .Values.domain }}
+    # port number for MariaDB. N/A for sqlite
+    port = 3306
 {{- else }}
     host = {{ .Values.database.host }}
-{{- end }}
     # port number for MariaDB. N/A for sqlite
     port = {{ .Values.database.port }}
+{{- end }}
 
 
 

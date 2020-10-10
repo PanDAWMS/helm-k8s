@@ -34,6 +34,7 @@ spec:
               chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               mkdir /sharedfs;
+              mkdir /proxy;
               sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/ ;
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
@@ -47,6 +48,8 @@ spec:
           volumeMounts:
             - name: condor-config
               mountPath: /mnt/condor/config.d
+            - name: cronfile
+              mountPath: /etc/cron.d
             - name: cvmfs-cms
               mountPath: /cvmfs/cms.cern.ch
             - name: cvmfs-atlas
@@ -61,9 +64,15 @@ spec:
           imagePullPolicy: Always
           env:
             - name: DB_HOST
+{{ if .Values.mariadb.deploy }}
+              value: mariadb.{{ .Values.domain }}
+            - name: DB_PORT
+              value: "3306"
+{{- else }}
               value: {{ .Values.database.host | quote }}
             - name: DB_PORT
               value: {{ .Values.database.port | quote }}
+{{- end }}
             - name: DB_USER
               value: {{ .Values.database.user | quote }}
             - name: DB_PASSWORD
@@ -77,6 +86,9 @@ spec:
         - name: condor-config
           configMap:
             name: {{ .Release.Name }}-condor-config 
+        - name: cronfile
+          configMap:
+            name: {{ .Release.Name }}-condor-cron
         - name: cvmfs-cms
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-csi-cvmfs-cms-pvc

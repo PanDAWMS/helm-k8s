@@ -8,6 +8,7 @@ data:
         compress
         missingok
         notifempty
+        dateext
         su {{ .Values.uname }} {{ .Values.gname }}
     }
 kind: ConfigMap

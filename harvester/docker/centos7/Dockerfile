@@ -23,9 +23,6 @@ RUN python3 -m pip install git+git://github.com/HSF/harvester.git#egg=pandaharve
 
 COPY CERN-bundle.pem /etc/pki/tls/certs/CERN-bundle.pem
 RUN mkdir /var/log/panda
-RUN mkdir /harvester_wdirs
-RUN mkdir -p /var/log/harvester/k8slog
-RUN mkdir -p /var/log/harvester/condor_logs
 
 WORKDIR /usr
 COPY panda_harvester etc/sysconfig/panda_harvester

@@ -1,8 +1,7 @@
-{{ if .Values.cvmfs_csi }}
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: csi-cvmfs-cms
+  name: {{ .Release.Name }}-csi-cvmfs-cms
 provisioner: cvmfs.csi.cern.ch
 parameters:
   repository: cms.cern.ch
@@ -10,12 +9,11 @@ parameters:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: csi-cvmfs-atlas
+  name: {{ .Release.Name }}-csi-cvmfs-atlas
 provisioner: cvmfs.csi.cern.ch
 parameters:
   repository: atlas.cern.ch
 ---
-{{ end }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -26,7 +24,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: csi-cvmfs-cms
+  storageClassName: {{ .Release.Name }}-csi-cvmfs-cms
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -38,4 +36,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: csi-cvmfs-atlas
+  storageClassName: {{ .Release.Name }}-csi-cvmfs-atlas

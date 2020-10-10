@@ -35,6 +35,7 @@ spec:
               chmod 400 /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               chown {{ .Values.uname }}:{{ .Values.gname }}  /home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa;
               mkdir /sharedfs;
+              mkdir /proxy;
               sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
               sh /usr/harvester_start.sh
           env:
@@ -47,6 +48,9 @@ spec:
           volumeMounts:
           - name: panda-config
             mountPath: /usr/etc/panda
+            readOnly: False
+          - name: cronfile
+            mountPath: /etc/cron.d
             readOnly: False
           - name: sysconfig-config
             mountPath: /usr/etc/sysconfig
@@ -78,6 +82,9 @@ spec:
         - name: sysconfig-config
           configMap:
             name: {{ .Release.Name }}-sysconfig
+        - name: cronfile
+          configMap:
+            name: {{ .Release.Name }}-harvester-cron
         - name: cvmfs-cms
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-csi-cvmfs-cms-pvc
@@ -95,4 +102,3 @@ spec:
         nameservers:
           - {{ .Values.DNSserver }}
 {{- end }}
-

@@ -24,5 +24,4 @@ RUN mv /sbin/cream_gahp /sbin/cream_gahp.bak
 COPY cream_gahp /sbin/cream_gahp
 COPY libclassad.so.8 /usr/lib64/libclassad.so.8
 
-Entrypoint /usr/bin/supervisord -c
-CMD /etc/supervisord.conf
+CMD /usr/bin/supervisord -c /etc/supervisord.conf

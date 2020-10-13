@@ -1,1 +1,1 @@
-55 * * * * root pgrep 'sshfs' || sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/${HARVESTER_UNAME}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/
+55 * * * * root sh /usr/etc/panda/check_sshfs.sh >> /tmp/check.log

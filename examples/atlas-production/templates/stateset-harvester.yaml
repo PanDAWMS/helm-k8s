@@ -37,10 +37,10 @@ spec:
               mkdir /sharedfs;
               mkdir /proxy;
               sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
+              cp -a /sharedfs/proxy/* /proxy/;
+              env| grep HARVESTER >> /etc/environment;
               sh /usr/harvester_start.sh
           env:
-          - name: RESTART_CYCLE
-            value: '86400'
           - name: HARVESTER_UNAME
             value: {{ .Values.uname }}
           - name: HARVESTER_GNAME
@@ -68,15 +68,11 @@ spec:
           projected:
             sources:
             - configMap:
-                name: {{ .Release.Name }}-common
+                name: {{ .Release.Name }}-harvester-stuff
             - configMap:
                 name: {{ .Release.Name }}-harvester-cfg
             - configMap:
                 name: {{ .Release.Name }}-queueconfig
-            - configMap:
-                name: {{ .Release.Name }}-uwsgi
-            - configMap:
-                name: {{ .Release.Name }}-logroate
             - configMap:
                 name: {{ .Release.Name }}-submitter-config
         - name: sysconfig-config

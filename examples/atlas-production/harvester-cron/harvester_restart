@@ -1,1 +1,1 @@
-* 23 * * * root /usr/etc/rc.d/init.d/panda_harvester-uwsgi stop; logrotate /usr/etc/panda/panda_logroate; /usr/etc/rc.d/init.d/panda_harvester-uwsgi start
+* 23 * * * root sh /usr/etc/panda/harvester_restart.sh

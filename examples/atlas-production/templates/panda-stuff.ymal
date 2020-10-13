@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-harvester-stuff
+  namespace: default
+data:
+{{ (.Files.Glob "harvester-stuff/*").AsConfig | indent 2 }} 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-condor-stuff
+  namespace: default
+data:
+{{ (.Files.Glob "condor-stuff/*").AsConfig | indent 2 }}

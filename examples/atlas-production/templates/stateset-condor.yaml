@@ -36,9 +36,11 @@ spec:
               mkdir /sharedfs;
               mkdir /proxy;
               sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/ ;
+              cp -a /sharedfs/proxy/* /proxy/;
               mkdir /etc/grid-security;
               ln -s /cvmfs/cms.cern.ch/grid/etc/grid-security/certificates /etc/grid-security/certificates;
               ln -s /mnt/condor/config.d/condor_config.local /etc/condor/config.d/condor_config.local;
+              env | grep  CONDOR >> /etc/environment;
               supervisord -c /etc/supervisord.conf
           env:
           - name: CONDORUSER
@@ -46,6 +48,8 @@ spec:
           - name: CONDORGROUP
             value: {{ .Values.gname }}
           volumeMounts:
+            - name: condor-stuff
+              mountPath: /mnt/stuff/
             - name: condor-config
               mountPath: /mnt/condor/config.d
             - name: cronfile
@@ -83,6 +87,9 @@ spec:
             - name: init-dir
               mountPath: "/mnt/init"
       volumes:
+        - name: condor-stuff
+          configMap:
+            name: {{ .Release.Name }}-condor-stuff
         - name: condor-config
           configMap:
             name: {{ .Release.Name }}-condor-config 

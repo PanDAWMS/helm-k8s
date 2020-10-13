@@ -24,5 +24,3 @@ do
   sleep 5
 done
 /usr/etc/rc.d/init.d/panda_harvester-uwsgi start
-unset PYTHONPATH 
-/usr/bin/supervisord -c /etc/supervisord.conf

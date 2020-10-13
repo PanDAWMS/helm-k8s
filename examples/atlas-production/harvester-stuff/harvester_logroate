@@ -1,0 +1,9 @@
+/var/log/panda/*log {
+    create 0644 atlpan zp
+    rotate 180
+    daily
+    compress
+    missingok
+    notifempty
+    su atlpan zp
+}

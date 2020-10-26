@@ -20,6 +20,13 @@ data:
     # gid of the daemon process
     gid = {{ .Values.GID }}
 
+    # for container. start harvester service while creating container.
+{{- if .Values.harvester_autostart }}
+    auto_start = True
+{{- else }}
+    auto)start = False
+{{- end }}
+
     # logger name
     loggername = harvester
 
@@ -870,13 +877,13 @@ data:
     #
 
     [service_monitor]
-    active = False
+    active = True
 
     # optional in case you want to monitor any disk volume
-    #disk_volumes = data
+    disk_volumes = data
 
     # pidfile only necessary when running in uwsgi
-    pidfile = /var/log/harvester/panda_harvester.pid
+    pidfile = /var/log/panda/panda_harvester.pid
 
     ##########################
     #

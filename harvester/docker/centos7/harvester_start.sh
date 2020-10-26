@@ -23,4 +23,13 @@ do
   mysql -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASSWORD} -e '\q' && break
   sleep 5
 done
-/usr/etc/rc.d/init.d/panda_harvester-uwsgi start
+AUOT_START= `python -c 'from pandaharvester.harvesterconfig import harvester_config;print(harvester_config.master.auto_start)'`
+case $AUOT_START in
+  "true"|"True"|"TRUE")
+      echo "start harvester service"
+      /usr/etc/rc.d/init.d/panda_harvester-uwsgi start
+      ;;
+  *)
+      echo "harvester servie does NOT start. Please start it manually."
+      ;;
+esac

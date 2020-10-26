@@ -39,7 +39,8 @@ spec:
               sshfs -o reconnect,ServerAliveInterval=15 -o ServerAliveCountMax=3 -o allow_other -o StrictHostKeyChecking=no -o IdentityFile=/home/{{ .Values.uname }}/atlpan_k8s_sharedfs_id_ecdsa atlpan@aipanda028:/data2/atlpan/sharedvolume/ /sharedfs/;
               cp -a /sharedfs/proxy/* /proxy/;
               env| grep HARVESTER >> /etc/environment;
-              sh /usr/harvester_start.sh
+              sh /usr/harvester_start.sh;
+              supervisord -c /etc/supervisord.conf
           env:
           - name: HARVESTER_UNAME
             value: {{ .Values.uname }}

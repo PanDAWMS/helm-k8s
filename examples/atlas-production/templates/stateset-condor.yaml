@@ -24,7 +24,7 @@ spec:
           resources:
               requests:
                 cpu: 2
-                memory: 8Gi
+                memory: 14Gi
           command: ["/usr/bin/bash","-c"]
           args:
             - export INIT_ID=`cat /mnt/init/SCHEDD_CLUSTER_INITIAL_VALUE`;

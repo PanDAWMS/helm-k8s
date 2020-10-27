@@ -23,7 +23,7 @@ do
   mysql -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASSWORD} -e '\q' && break
   sleep 5
 done
-AUOT_START= `python -c 'from pandaharvester.harvesterconfig import harvester_config;print(harvester_config.master.auto_start)'`
+AUOT_START=`python -c 'from pandaharvester.harvesterconfig import harvester_config;print(harvester_config.master.auto_start)'`
 case $AUOT_START in
   "true"|"True"|"TRUE")
       echo "start harvester service"

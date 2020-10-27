@@ -23,6 +23,7 @@ RUN python3 -m pip install git+git://github.com/HSF/harvester.git#egg=pandaharve
 
 COPY CERN-bundle.pem /etc/pki/tls/certs/CERN-bundle.pem
 RUN mkdir /var/log/panda
+RUN mkdir /data
 
 WORKDIR /usr
 COPY panda_harvester etc/sysconfig/panda_harvester
@@ -34,5 +35,6 @@ COPY supervisord.conf /etc/supervisord.conf
 
 RUN ln -s /mnt/panda_harvester.cfg /usr/etc/panda/panda_harvester.cfg
 RUN ln -s /mnt/panda_queueconfig /usr/etc/panda/panda_queueconfig
+RUN ln -s /usr/local/bin/uwsgi /bin/uwsgi
 
 COPY harvester_start.sh /usr/harvester_start.sh

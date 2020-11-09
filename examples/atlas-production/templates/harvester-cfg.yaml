@@ -680,9 +680,8 @@ data:
     #        It also caches proxy files which are renewed by Credential Manager. Access key for BNL object store
     #        is retrieved from panda.
     data =
-     ddmendpoints_objectstores.json||http://atlas-agis-api.cern.ch/request/ddmendpoint/query/list/?json&state=ACTIVE&site_state=ACTIVE&preset=dict&json_pretty=1&type[]=OS_LOGS&type[]=OS_ES
-     panda_queues.json||http://atlas-agis-api.cern.ch/request/pandaqueue/query/list/?json&preset=schedconf.all&vo_name=atlas
-     agis_ddmendpoints.json||http://atlas-agis-api.cern.ch/request/ddmendpoint/query/list/?json&state=ACTIVE&site_state=ACTIVE&preset=dict&json_pretty=1
+     ddmendpoints_objectstores.json||https://atlas-cric.cern.ch/api/atlas/ddmendpoint/query/?json&state=ACTIVE&site_state=ACTIVE&preset=dict&json_pretty=1&type[]=OS_LOGS&type[]=OS_ES
+     panda_queues.json||https://atlas-cric.cern.ch/api/atlas/pandaqueue/query/?json
      resource_types.json||panda_server:get_resource_types
      job_statistics.json||panda_server:get_job_stats
      queues_config_file||https://raw.githubusercontent.com/PanDAWMS/harvester_configurations/master/GRID/common_grid_queueconfig_template.json

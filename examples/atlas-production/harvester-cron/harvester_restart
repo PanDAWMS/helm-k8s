@@ -1,1 +1,1 @@
-* 23 * * * root sh /usr/etc/panda/harvester_restart.sh
+0 23 * * * root sh /usr/etc/panda/harvester_restart.sh 2>&1 >> /tmp/restart.log

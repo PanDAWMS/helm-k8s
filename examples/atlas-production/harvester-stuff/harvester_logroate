@@ -1,6 +1,6 @@
 /var/log/panda/*log {
     create 0644 atlpan zp
-    rotate 180
+    rotate 10
     daily
     compress
     missingok

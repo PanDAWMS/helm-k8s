@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  # panda server container image
+  name: ghcr.io/pandawms/panda-server:latest
+
+  # pull policy
+  pullPolicy: Always
+
+# start the service when pod gets started
+autoStart: false

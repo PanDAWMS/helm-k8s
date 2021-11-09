@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-panda-server-deployment
+  labels:
+    app: panda-server
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: panda-server
+  template:
+    metadata:
+      labels:
+        app: panda-server
+    spec:
+      containers:
+      - name: panda-server
+        image: {{ .Values.image.name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ if .Values.autoStart -}}
+        command: [ '/etc/rc.d/init.d/httpd-pandasrv', 'start' ]
+        {{ end -}}
+        ports:
+        - containerPort: 25080
+        - containerPort: 25443
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/panda/etc/configmap
+        - name: hostcert-volume
+          mountPath: /opt/panda/etc/cert
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-server-configmap
+        - name: hostcert-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-server-cert

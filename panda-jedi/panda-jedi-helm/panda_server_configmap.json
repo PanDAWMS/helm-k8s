@@ -1,0 +1,25 @@
+{
+    "server": {
+        "CRIC_URL_CM": "https://atlas-cric.cern.ch/api/core/sitematrix/query/?json&json_pretty=0", 
+        "CRIC_URL_DDMBLACKLIST": "https://datalake-cric.cern.ch/api/atlas/ddmendpointstatus/query/?json&activity=write_wan&fstate=OFF", 
+        "CRIC_URL_DDMENDPOINTS": "https://datalake-cric.cern.ch/api/atlas/ddmendpoint/query/?json", 
+        "CRIC_URL_SCHEDCONFIG": "https://datalake-cric.cern.ch/api/atlas/pandaqueue/query/?json", 
+        "CRIC_URL_SITES": "https://datalake-cric.cern.ch/api/atlas/site/query/?json", 
+        "adder_plugins": "wlcg:dataservice.AdderDummyPlugin:AdderDummyPlugin", 
+        "backend": "postgres", 
+        "dbhost": "FIXME: database hostname",
+        "dbname": "panda_db", 
+        "dbpasswd": "FIXME: database password",
+        "dbport": 3130, 
+        "dbuser": "FIXME: database user",
+        "production_dns": "FIXME: a comma-separated list of privileged user names",
+        "pserveralias": "FIXME: a common name of httpd",
+        "schemaDEFT": "DOMA_DEFT", 
+        "schemaJEDI": "DOMA_PANDA", 
+        "schemaMETA": "DOMA_PANDAMETA", 
+        "schemaPANDA": "DOMA_PANDA", 
+        "schemaPANDAARCH": "DOMA_PANDAARCH", 
+        "setupper_plugins": "wlcg:dataservice.SetupperDummyPlugin:SetupperDummyPlugin", 
+        "token_authType": "oidc"
+    }
+}

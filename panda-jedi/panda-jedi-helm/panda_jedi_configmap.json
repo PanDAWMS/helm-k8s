@@ -1,0 +1,15 @@
+{
+    "db": {
+        "backend": "postgres", 
+        "dbhost": "FIXME: database hostname", 
+        "dbname": "panda_db", 
+        "dbpasswd": "FIXME: database password", 
+        "dbport": 3130, 
+        "dbuser": "FIXME: database user", 
+        "schemaDEFT": "DOMA_DEFT", 
+        "schemaJEDI": "DOMA_PANDA", 
+        "schemaMETA": "DOMA_PANDAMETA", 
+        "schemaPANDA": "DOMA_PANDA", 
+        "schemaPANDAARCH": "DOMA_PANDAARCH"
+    }
+}

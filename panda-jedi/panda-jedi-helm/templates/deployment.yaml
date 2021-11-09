@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-panda-jedi-deployment
+  labels:
+    app: panda-jedi-server
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: panda-jedi-server
+  template:
+    metadata:
+      labels:
+        app: panda-jedi-server
+    spec:
+      containers:
+      - name: panda-jedi-server
+        image: {{ .Values.image.name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ if .Values.autoStart -}}
+        command: ["/bin/sh", "-c"]
+        args:
+          - /etc/rc.d/init.d/httpd-pandasrv start;
+            /etc/rc.d/init.d/panda-jedi start;
+        {{ end -}}
+        ports:
+        - containerPort: 25080
+        - containerPort: 25443
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/panda/etc/configmap
+        - name: hostcert-volume
+          mountPath: /opt/panda/etc/cert
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-jedi-configmap
+        - name: hostcert-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-server-cert

@@ -1,0 +1,25 @@
+# JEDI and server configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-panda-jedi-configmap
+data:
+  panda_server_configmap.json: |-
+{{ .Files.Get "panda_server_configmap.json" | indent 4}}
+
+  panda_jedi_configmap.json: |-
+{{ .Files.Get "panda_jedi_configmap.json" | indent 4}}
+
+---
+
+# host cert and key
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-panda-server-cert
+data:
+  hostcert.pem: |-
+{{ .Files.Get "hostcert.pem" | indent 4}}
+
+  hostkey.pem: |-
+{{ .Files.Get "hostkey.pem" | indent 4}}

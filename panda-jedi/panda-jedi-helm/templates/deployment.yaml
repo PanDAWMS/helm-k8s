@@ -23,6 +23,7 @@ spec:
         args:
           - /etc/rc.d/init.d/httpd-pandasrv start;
             /etc/rc.d/init.d/panda-jedi start;
+            sleep infinity & wait
         {{ end -}}
         ports:
         - containerPort: 25080

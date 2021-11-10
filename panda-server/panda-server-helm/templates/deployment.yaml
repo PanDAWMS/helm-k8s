@@ -19,7 +19,10 @@ spec:
         image: {{ .Values.image.name }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{ if .Values.autoStart -}}
-        command: [ '/etc/rc.d/init.d/httpd-pandasrv', 'start' ]
+        command: [ "/bin/sh", "-c" ]
+        args:
+          - /etc/rc.d/init.d/httpd-pandasrv start;
+            sleep infinity & wait
         {{ end -}}
         ports:
         - containerPort: 25080

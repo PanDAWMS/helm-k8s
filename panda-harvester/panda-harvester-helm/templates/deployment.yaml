@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-panda-harvester-deployment
+  labels:
+    app: panda-harvester
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: panda-harvester
+  template:
+    metadata:
+      labels:
+        app: panda-harvester
+    spec:
+      containers:
+      - name: panda-harvester
+        image: {{ .Values.image.name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ if .Values.autoStart -}}
+        command: [ "/bin/sh", "-c" ]
+        args:
+          - /opt/harvester/etc/rc.d/init.d/panda_harvester-uwsgi start;
+            sleep infinity & wait
+        {{ end -}}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/panda/etc/configmap
+        - name: queue_config-volume
+          mountPath: /opt/panda/etc/queue_config
+        - name: cert-volume
+          mountPath: /opt/panda/etc/cert
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-harvester-configmap
+        - name: queue_config-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-harvester-queue_config
+        - name: cert-volume
+          configMap:
+            name: {{ .Release.Name }}-panda-harvester-cert

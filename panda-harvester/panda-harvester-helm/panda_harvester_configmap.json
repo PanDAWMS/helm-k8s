@@ -1,0 +1,22 @@
+{
+    "db": {
+        "database_filename": "/data/harvester/harvester.db", 
+        "verbose": true
+    }, 
+    "master": {
+        "gname": "zp", 
+        "harvester_id": "my_harvester", 
+        "uname": "atlpan"
+    }, 
+    "pandacon": {
+        "ca_cert": null, 
+        "pandaURL": "http://pandaserver-doma.cern.ch:25080/server/panda", 
+        "pandaURLSSL": "https://pandaserver-doma.cern.ch/server/panda", 
+        "verbose": true
+    }, 
+    "qconf": {
+        "queueList": [
+            "ALL"
+        ]
+    }
+}

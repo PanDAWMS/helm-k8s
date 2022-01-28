@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  # harvester container image
+  name: ghcr.io/hsf/harvester:master
+
+  # pull policy
+  pullPolicy: Always
+
+# start the service when pod gets started
+autoStart: false

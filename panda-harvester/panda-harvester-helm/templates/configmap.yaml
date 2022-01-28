@@ -1,0 +1,33 @@
+# instance configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-panda-harvester-configmap
+data:
+  panda_harvester_configmap.json: |-
+{{ .Files.Get "panda_harvester_configmap.json" | indent 4}}
+
+---
+
+# queue config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-panda-harvester-queue_config
+data:
+  panda_queueconfig.json: |-
+{{ .Files.Get "panda_queueconfig.json" | indent 4}}
+
+---
+
+# host cert and key
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-panda-harvester-cert
+data:
+  usercert.pem: |-
+{{ .Files.Get "usercert.pem" | indent 4}}
+
+  userkey.pem: |-
+{{ .Files.Get "userkey.pem" | indent 4}}

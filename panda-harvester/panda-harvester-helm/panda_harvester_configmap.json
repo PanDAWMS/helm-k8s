@@ -5,12 +5,15 @@
     }, 
     "master": {
         "gname": "zp", 
-        "harvester_id": "my_harvester", 
+        "harvester_id": "FIXME",
         "uname": "atlpan"
     }, 
     "pandacon": {
-        "ca_cert": null, 
-        "pandaURL": "http://pandaserver-doma.cern.ch:25080/server/panda", 
+        "ca_cert": null,
+        "auth_type": "oidc",
+        "auth_token": "FIXME",
+        "auth_origin": "FIXME",
+        "pandaURL": "http://pandaserver-doma.cern.ch:25080/server/panda",
         "pandaURLSSL": "https://pandaserver-doma.cern.ch/server/panda", 
         "verbose": true
     }, 

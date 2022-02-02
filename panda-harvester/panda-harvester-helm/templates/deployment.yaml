@@ -29,8 +29,6 @@ spec:
           mountPath: /opt/panda/etc/configmap
         - name: queue_config-volume
           mountPath: /opt/panda/etc/queue_config
-        - name: cert-volume
-          mountPath: /opt/panda/etc/cert
       volumes:
         - name: config-volume
           configMap:
@@ -38,6 +36,3 @@ spec:
         - name: queue_config-volume
           configMap:
             name: {{ .Release.Name }}-panda-harvester-queue_config
-        - name: cert-volume
-          configMap:
-            name: {{ .Release.Name }}-panda-harvester-cert

@@ -18,16 +18,3 @@ data:
   panda_queueconfig.json: |-
 {{ .Files.Get "panda_queueconfig.json" | indent 4}}
 
----
-
-# host cert and key
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Release.Name }}-panda-harvester-cert
-data:
-  usercert.pem: |-
-{{ .Files.Get "usercert.pem" | indent 4}}
-
-  userkey.pem: |-
-{{ .Files.Get "userkey.pem" | indent 4}}
